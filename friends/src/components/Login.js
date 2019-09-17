@@ -1,18 +1,18 @@
 import React, { useState } from 'react';
 import { axiosWithAuth } from '../utils/axios-with-auth';
+import { Redirect } from 'react-router-dom';
 
 function Login(props) {
-  const [user, setUser] = useState({ username: '', password: '' });
   const [error, setError] = useState(null);
+  const [user, setUser] = useState({
+    username: 'Lambda School',
+    password: 'i<3Lambd4',
+  });
 
   const handleChange = (event) => {
     setUser({ ...user, [event.target.name]: event.target.value });
   };
 
-  /*
-   * username: 'Lambda School'
-   * password: 'i<3Lambd4'
-   */
   const login = (event) => {
     event.preventDefault();
 
@@ -25,9 +25,10 @@ function Login(props) {
       .catch((err) => setError(err.message));
   };
 
-  return (
-    <div>
-      <h1>Login</h1>
+  return window.localStorage.getItem('token') ? (
+    <Redirect to="/" />
+  ) : (
+    <div className="login">
       <form onSubmit={login}>
         <label htmlFor="username">Username</label>
         <input

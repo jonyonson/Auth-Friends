@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { axiosWithAuth } from '../utils/axios-with-auth';
+import AddFriend from './AddFriend';
 
 function FriendsList() {
   const [friends, setFriends] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [isAdding, setIsAdding] = useState(false);
 
   useEffect(() => {
     fetchFriends();
@@ -11,20 +13,38 @@ function FriendsList() {
 
   const fetchFriends = async () => {
     try {
-      const response = await axiosWithAuth().get(
+      const res = await axiosWithAuth().get(
         'http://localhost:5000/api/friends',
       );
-      setFriends(response.data);
+      const data = res.data.reverse();
+      setFriends(data);
       setIsLoading(false);
+      setIsAdding(false);
     } catch (error) {
       console.log(error);
     }
   };
 
-  return (
+  const addFriend = async (newFriend) => {
+    setIsAdding(true);
+
+    try {
+      await axiosWithAuth().post(
+        'http://localhost:5000/api/friends',
+        newFriend,
+      );
+      fetchFriends();
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  return isLoading ? (
+    <h1>Loading...</h1>
+  ) : (
     <div>
-      <h1>Friends</h1>
-      {isLoading && <h1>Loading...</h1>}
+      <AddFriend addFriend={addFriend} fetchFriends={fetchFriends} />
+      {isAdding && <h1>Adding Friend...</h1>}
       {friends.map((friend) => (
         <div key={friend.id} className="friend__card">
           <p>Name: {friend.name}</p>
