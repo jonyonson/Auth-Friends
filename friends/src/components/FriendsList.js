@@ -13,9 +13,7 @@ function FriendsList() {
 
   const fetchFriends = async () => {
     try {
-      const res = await axiosWithAuth().get(
-        'http://localhost:5000/api/friends',
-      );
+      const res = await axiosWithAuth().get('/friends');
       const data = res.data.reverse();
       setFriends(data);
       setIsLoading(false);
@@ -29,10 +27,7 @@ function FriendsList() {
     setIsAdding(true);
 
     try {
-      await axiosWithAuth().post(
-        'http://localhost:5000/api/friends',
-        newFriend,
-      );
+      await axiosWithAuth().post('/friends', newFriend);
       fetchFriends();
     } catch (error) {
       console.log(error);

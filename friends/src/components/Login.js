@@ -17,7 +17,7 @@ function Login(props) {
     event.preventDefault();
 
     axiosWithAuth()
-      .post('http://localhost:5000/api/login', user)
+      .post('/login', user)
       .then((res) => {
         localStorage.setItem('token', res.data.payload);
         props.history.push('/');
